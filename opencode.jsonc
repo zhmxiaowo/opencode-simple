@@ -1,74 +1,51 @@
 {
-  // OpenCode Simple — CDD & Spec-First MCP Configuration
-  // 仅保留 5 个核心 MCP，其余全部禁用
-  "mcpServers": {
-    // ===== 核心 MCP 矩阵 (5 个) =====
+  // OpenCode Simple — CDD & Spec-First Configuration
+  // https://opencode.ai/docs/config
+  "$schema": "https://opencode.ai/config.json",
 
+  // ===== 规则：引入 rules/common/ 下的所有准则 =====
+  "instructions": [
+    "rules/common/*.md"
+  ],
+
+  // ===== MCP 服务器配置 (5 个核心) =====
+  "mcp": {
     // 1. exa-web-search: 全网搜索代码、报错、最佳实践
     "exa-web-search": {
-      "command": "npx",
-      "args": ["-y", "exa-mcp-server"],
-      "env": {
-        "EXA_API_KEY": "${EXA_API_KEY}"
-      },
-      "description": "Web search for code, errors, and best practices — powers Spec-First research phase"
+      "type": "local",
+      "command": ["npx", "-y", "exa-mcp-server"],
+      "environment": {
+        "EXA_API_KEY": "{env:EXA_API_KEY}"
+      }
     },
 
     // 2. context7: 查阅最新官方文档，防止 AI 幻觉
     "context7": {
-      "command": "npx",
-      "args": ["-y", "@context7/mcp-server"],
-      "description": "Live documentation lookup — prevents hallucination, powers Spec-First doc research"
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp"
     },
 
-    // 3. mcp-language-server: 本地语法树和 LSP 诊断（CDD 核心）
+    // 3. mcp-language-server: 本地 LSP 诊断（CDD 核心验证引擎）
     "mcp-language-server": {
-      "command": "npx",
-      "args": ["-y", "mcp-language-server", "--stdio"],
-      "description": "Local LSP diagnostics — the core CDD verification engine. Provides syntax tree, type checking, and error diagnostics."
+      "type": "local",
+      "command": ["npx", "-y", "mcp-language-server", "--stdio"]
     },
 
-    // 4. memory: 跨会话记忆（ECC V2 本能学习必需）
+    // 4. memory: 跨会话记忆（持续学习必需）
     "memory": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-memory"],
-      "description": "Persistent memory across sessions — required for continuous learning and cross-session context"
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-memory"]
     },
 
     // 5. sequential-thinking: 链式思考（CDD 编译错误分析必需）
     "sequential-thinking": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
-      "description": "Chain-of-thought reasoning — MANDATORY for CDD compile error analysis. Never guess, always think."
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-sequential-thinking"]
     }
-  },
-
-  // ===== 以下 MCP 已禁用 =====
-  "_disabled": {
-    "github": "Not needed for CDD core workflow — enable per-project if needed",
-    "firecrawl": "Replaced by exa-web-search",
-    "supabase": "Project-specific — enable per-project if needed",
-    "vercel": "Deployment-specific — enable per-project if needed",
-    "railway": "Deployment-specific — enable per-project if needed",
-    "cloudflare-docs": "Platform-specific — enable per-project if needed",
-    "cloudflare-workers-builds": "Platform-specific — enable per-project if needed",
-    "cloudflare-workers-bindings": "Platform-specific — enable per-project if needed",
-    "cloudflare-observability": "Platform-specific — enable per-project if needed",
-    "clickhouse": "Database-specific — enable per-project if needed",
-    "magic": "UI-specific — enable per-project if needed",
-    "filesystem": "Redundant with built-in file operations",
-    "insaits": "Optional security — enable with ECC_ENABLE_INSAITS=1 if needed"
-  },
-
-  // ===== 推荐按需启用的 MCP =====
-  "_optional": {
-    "ast-grep": "AST-level structural code search/replace (npm: @ast-grep/cli). Useful for large-scale refactors that LSP cannot handle — e.g. rename all instances of a pattern across files.",
-    "grep-app": "GitHub code search across public repos (grep.app). Stronger than 'gh search code' for finding real-world usage patterns and implementations."
-  },
-
-  "_comments": {
-    "philosophy": "CDD + Spec-First: Only 5 MCPs. Research → Spec → Code → Compile → Green light.",
-    "usage": "Copy this to your project root as opencode.jsonc or to ~/.config/opencode/",
-    "env_vars": "Set EXA_API_KEY in your environment for exa-web-search to work"
   }
+
+  // ===== 按需启用的 MCP（取消注释即可） =====
+  // "github": { "type": "local", "command": ["npx", "-y", "@modelcontextprotocol/server-github"], "environment": { "GITHUB_TOKEN": "{env:GITHUB_TOKEN}" } }
+  // "ast-grep": AST-level structural code search/replace, useful for large-scale refactors
+  // "grep-app": { "type": "remote", "url": "https://mcp.grep.app" }
 }

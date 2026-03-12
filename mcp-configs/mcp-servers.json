@@ -1,37 +1,45 @@
 {
-  "mcpServers": {
-    "exa-web-search": {
-      "command": "npx",
-      "args": ["-y", "exa-mcp-server"],
-      "env": {
-        "EXA_API_KEY": "${EXA_API_KEY}"
-      },
-      "description": "Web search for code, errors, and best practices — powers Spec-First research"
-    },
-    "context7": {
-      "command": "npx",
-      "args": ["-y", "@context7/mcp-server"],
-      "description": "Live documentation lookup — prevents hallucination in Spec-First phase"
-    },
-    "mcp-language-server": {
-      "command": "npx",
-      "args": ["-y", "mcp-language-server", "--stdio"],
-      "description": "Local LSP diagnostics — CDD compile verification core"
-    },
-    "memory": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-memory"],
-      "description": "Persistent memory across sessions — continuous learning support"
-    },
-    "sequential-thinking": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
-      "description": "Chain-of-thought reasoning — mandatory for CDD compile error analysis"
+  "_readme": "OpenCode MCP 服务器参考配置。将需要的服务器复制到 opencode.jsonc 的 mcp 字段中。",
+  "_format": "OpenCode 要求: type (local/remote) + command (数组) 或 url (字符串)",
+
+  "exa-web-search": {
+    "type": "local",
+    "command": ["npx", "-y", "exa-mcp-server"],
+    "environment": {
+      "EXA_API_KEY": "{env:EXA_API_KEY}"
     }
   },
-  "_comments": {
-    "philosophy": "CDD + Spec-First: 5 core MCPs only. Research → Spec → Code → Compile → Done.",
-    "usage": "Copy the servers you need to your project's opencode.jsonc or ~/.config/opencode/",
-    "env_vars": "Set EXA_API_KEY in your environment for exa-web-search"
+  "context7": {
+    "type": "remote",
+    "url": "https://mcp.context7.com/mcp"
+  },
+  "mcp-language-server": {
+    "type": "local",
+    "command": ["npx", "-y", "mcp-language-server", "--stdio"]
+  },
+  "memory": {
+    "type": "local",
+    "command": ["npx", "-y", "@modelcontextprotocol/server-memory"]
+  },
+  "sequential-thinking": {
+    "type": "local",
+    "command": ["npx", "-y", "@modelcontextprotocol/server-sequential-thinking"]
+  },
+
+  "_optional_servers": {
+    "github": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
+      "environment": { "GITHUB_TOKEN": "{env:GITHUB_TOKEN}" }
+    },
+    "grep-app": {
+      "type": "remote",
+      "url": "https://mcp.grep.app"
+    },
+    "sentry": {
+      "type": "remote",
+      "url": "https://mcp.sentry.dev/mcp",
+      "oauth": {}
+    }
   }
 }
