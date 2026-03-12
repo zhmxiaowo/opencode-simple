@@ -1,0 +1,37 @@
+{
+  "mcpServers": {
+    "exa-web-search": {
+      "command": "npx",
+      "args": ["-y", "exa-mcp-server"],
+      "env": {
+        "EXA_API_KEY": "${EXA_API_KEY}"
+      },
+      "description": "Web search for code, errors, and best practices — powers Spec-First research"
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@context7/mcp-server"],
+      "description": "Live documentation lookup — prevents hallucination in Spec-First phase"
+    },
+    "mcp-language-server": {
+      "command": "npx",
+      "args": ["-y", "mcp-language-server", "--stdio"],
+      "description": "Local LSP diagnostics — CDD compile verification core"
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "description": "Persistent memory across sessions — continuous learning support"
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "description": "Chain-of-thought reasoning — mandatory for CDD compile error analysis"
+    }
+  },
+  "_comments": {
+    "philosophy": "CDD + Spec-First: 5 core MCPs only. Research → Spec → Code → Compile → Done.",
+    "usage": "Copy the servers you need to your project's opencode.jsonc or ~/.config/opencode/",
+    "env_vars": "Set EXA_API_KEY in your environment for exa-web-search"
+  }
+}
